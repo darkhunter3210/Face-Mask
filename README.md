@@ -1,11 +1,11 @@
 # Face Mask Detection with YoloV5
 
 # Run Frontend
-### `cd Frontend`
-### `yarn install`
-### `yarn start`
+1. ### `cd Frontend`
+2. ### `yarn install`
+3. ### `yarn start`
 
 # Run Backend
-### `cd Backend`
-### `python -m flask run`
+1. ### `cd Backend`
+2. ### `python -m flask run`
 
