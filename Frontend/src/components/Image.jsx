@@ -59,6 +59,7 @@ export default function Image() {
                 onClick={handlePrediction}>
                 Run Prediction
             </button>
+
             {image.preview ? (
                 <div className="preview-img">
                     <h1> Original </h1>
@@ -68,6 +69,7 @@ export default function Image() {
                 <>
                 </>
             )}
+
             {loading ? (
                 <div className="Loading-Mesg">
                     Processing
@@ -76,6 +78,7 @@ export default function Image() {
                 <>
                 </>
             )}
+
             {errMesg ? (
                 <div className="Err-Mesg">
                     {errMesg}
@@ -84,6 +87,7 @@ export default function Image() {
                 <>
                 </>
             )}
+            
             {predictedImage.url ? (
                 <div className="predicted-trim">
                     <h1> Prediction </h1>
