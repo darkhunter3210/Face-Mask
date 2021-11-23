@@ -6,7 +6,7 @@ import './HeroSection.css';
 function HeroSection() {
   return (
     <div className='hero-container' id="intro">
-      <video src='/videos/video-1.mp4' autoPlay loop muted />
+      <video src='/videos/video-2.mp4' autoPlay loop muted />
       <h1>Wear a mask, is your task</h1>
       <p>We will find you if you don't</p>
       <div className='hero-btns'>
@@ -14,10 +14,12 @@ function HeroSection() {
           className='btns'
           buttonStyle='btn--outline'
           buttonSize='btn--large'
+          path="#image"
         >
           Image
         </Button>
         <Button
+          path="#stream"
           className='btns'
           buttonStyle='btn--primary'
           buttonSize='btn--large'
