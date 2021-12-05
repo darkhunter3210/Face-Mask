@@ -21,13 +21,13 @@ model = torch.hub.load('ultralytics/yolov5', 'custom', 'best.pt', force_reload=T
 model.conf = 0.40
 
 url = ''
-
+stream_on = False
 def generate_frame_stream():
     # try to find a way to get 720p instead of best maybe?
     camera_source = pafy.new(url).getbest()
     capture = cv2.VideoCapture(camera_source.url)  
 
-    while(True):
+    while(stream_on):
         start = time.time()
         #Capture frame-by-frame
         ret, raw_bgr_frame = capture.read()
@@ -49,7 +49,7 @@ def generate_frame_stream():
 
         stop = time.time()
         print("Frame process time: ", stop - start)
-        
+    print('exiting loop')    
 @app.route('/video_feed',methods=['GET'])
 def video_feed():
     """
@@ -58,8 +58,19 @@ def video_feed():
     ie: http://127.0.0.1:5000/video_feed?url={some_youtube_link}
     """
     global url
+    global stream_on
+    stream_on = True
     url = request.args.get("url")
     return Response(generate_frame_stream(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+
+@app.route('/stop_feed',methods=['POST'])
+@cross_origin()
+def stop_feed():
+    global stream_on
+    stream_on = False
+    return Response('Stopped')
+
 
 @app.route('/predict_img',methods=['POST'])
 @cross_origin()
@@ -91,4 +102,4 @@ def predict_img():
     return response
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, threaded = True)
