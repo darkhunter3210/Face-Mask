@@ -1,6 +1,6 @@
 # python -m flask run
 
-from flask import Flask, render_template, Response, send_file, request
+from flask import Flask, json, render_template, Response, send_file, request, jsonify
 from flask_cors import CORS, cross_origin
 import torch.backends.cudnn as cudnn
 import numpy as np
@@ -22,11 +22,37 @@ model.conf = 0.40
 
 url = ''
 stream_on = False
+total_frame = 0
+stat_dict = {
+    '0': 0,
+    '1': 0
+}
+
+def pred_analytics(df_param):
+    df = df_param
+    zero_cnt, one_cnt = 0, 0
+    if df.empty == False:
+        s = df['class'].value_counts(dropna=False)
+
+        try:
+            zero_cnt = s[0]
+        except:
+            pass
+        try:
+            one_cnt = s[1]
+        except:
+            pass
+        print(zero_cnt,one_cnt)
+    return zero_cnt, one_cnt
+
+
 def generate_frame_stream():
     # try to find a way to get 720p instead of best maybe?
     camera_source = pafy.new(url).getbest()
     capture = cv2.VideoCapture(camera_source.url)  
-
+    
+    global stat_dict
+    global total_frame
     while(stream_on):
         start = time.time()
         #Capture frame-by-frame
@@ -38,8 +64,16 @@ def generate_frame_stream():
         pred = model(pred_frame_rgb)
         pred_frame = pred.render()[0]
 
+        #analytics dataframe
+        df = pred.pandas().xyxy[0]
+        zero_count, one_count = pred_analytics((df))
+        stat_dict['0'] += zero_count
+        stat_dict['1'] += one_count
+        total_frame += 1
+
         # only predicted frame
         frame_bytes = simplejpeg.encode_jpeg(pred_frame)
+        
         yield(b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
 
         # # original and predicted frames side by side horizontally
@@ -50,6 +84,7 @@ def generate_frame_stream():
         stop = time.time()
         print("Frame process time: ", stop - start)
     print('exiting loop')    
+    
 @app.route('/video_feed',methods=['GET'])
 def video_feed():
     """
@@ -59,16 +94,35 @@ def video_feed():
     """
     global url
     global stream_on
+
     stream_on = True
     url = request.args.get("url")
+    
     return Response(generate_frame_stream(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
+
+@app.route('/analytics',methods=['GET'])
+def send_analytics():
+    res = {
+        'Mask': stat_dict['0'],
+        'No Mask': stat_dict['1'],
+        'Total Frame': total_frame
+        }
+
+    return jsonify(res)
 
 @app.route('/stop_feed',methods=['POST'])
 @cross_origin()
 def stop_feed():
+    global total_frame
+    global stat_dict
     global stream_on
     stream_on = False
+    stat_dict = {
+    '0': 0,
+    '1': 0
+    }
+    total_frame = 0
     return Response('Stopped')
 
 

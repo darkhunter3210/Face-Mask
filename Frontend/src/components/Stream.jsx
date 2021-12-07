@@ -22,6 +22,11 @@ export default function Stream() {
         axios.post('http://127.0.0.1:5000/stop_feed').then(res => console.log(res.data))
         console.log('pressed')
         setShowStream(false);
+    }
+
+    const handleTest = (e) =>{
+        axios.get('http://127.0.0.1:5000/analytics').then(res => console.log(res.data))
+        console.log('pressed')
     }   
 
     return (
@@ -30,6 +35,7 @@ export default function Stream() {
                 <label>
                     Youtube URL:
                     <input type="text" value={url} onChange={handleUrlChange} id="youtube-url-field" onKeyDown={handleKeyDown}/>
+                    <button onClick={handleTest}>Test</button>
                     
                 </label>
                 {/* <button class='stop' onClick={handleStopbutton}>Stop</button> */}
