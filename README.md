@@ -1,4 +1,5 @@
-# Face Mask Detection with YoloV5
+# Machine Learning - *Face Mask Detection* using yolov5
+
 
 # Run Frontend
 1. `cd Frontend/`
