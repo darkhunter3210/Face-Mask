@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import axios from 'axios';
+import { Bar } from 'react-chartjs-2';
+import 'chart.js/auto';
 import "./Image.css"
 
 export default function Image() {
@@ -51,7 +53,7 @@ export default function Image() {
       }
 
     return (
-        <div className="image" id="image">
+        <div className="image" id="image" style={{width: '100%', height:'min-content',minHeight:'200px'}}>
             <input className="fileInput" 
                 type="file" 
                 onChange={handleImageChange}
@@ -92,11 +94,49 @@ export default function Image() {
             )}
             
             {predictedImage.imgByteCode ? (
-                <div className="predicted-trim">
+                <div className="predicted-trim" >
                     <h1> Prediction </h1>
                     <img src={`data:image/jpeg;base64,${predictedImage.imgByteCode}`} alt="dummy" className="pred-img" width="800" height="400"/>
-                    {/* <h1>Mask {predictedImage.maskCount}</h1>
-                    <h1>No Mask {predictedImage.noMaskCount}</h1> */}
+
+                    <Bar
+                        data={{
+                            labels:['Count'], 
+                            datasets:[
+                                {
+                                    label: 'Mask',
+                                    data: [predictedImage.maskCount,],
+                                    backgroundColor: [
+                                        'rgba(0, 255, 0, .3)',
+                                    ],
+                                    borderColor:[
+                                        'rgba(0, 255, 0, 1)',
+                                    ],
+                                    borderWidth:1,
+                                },
+                                {
+                                    label: 'No Mask',
+                                    data: [predictedImage.noMaskCount],
+                                    backgroundColor: [
+                                        'rgba(255, 0, 0, .3)',
+                                    ],
+                                    borderColor:[
+                                        'rgba(255, 0, 0, 1)',
+                                    ],
+                                    borderWidth:1,
+                                },
+                            ],
+                        }}
+                        height={100}
+                        width={200}
+                        options={{
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            },
+                            
+                        }}
+                    />
                 </div>
                 ) : (
                 <>
