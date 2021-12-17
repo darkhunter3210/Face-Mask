@@ -4,7 +4,7 @@ import "./Image.css"
 
 export default function Image() {
     const [image, setImage] = useState({ preview: "", raw: "" });
-    const [predictedImage, setPredictedImage] = useState({imgByteCode: ""});
+    const [predictedImage, setPredictedImage] = useState({imgByteCode: "", maskCount: 0, noMaskCount: 0});
     const [loading, setLoading] = useState(false);
     const [errMesg, setErrMesg] = useState("");
 
@@ -36,7 +36,11 @@ export default function Image() {
             },
           })
           .then(res => {
-            setPredictedImage({imgByteCode: res.data.predImage});  
+            setPredictedImage({
+                imgByteCode: res.data.predImage, 
+                maskCount: res.data.maskCount, 
+                noMaskCount: res.data.noMaskCount
+            });
             setErrMesg("");
             setLoading(false);     
           })
@@ -91,6 +95,8 @@ export default function Image() {
                 <div className="predicted-trim">
                     <h1> Prediction </h1>
                     <img src={`data:image/jpeg;base64,${predictedImage.imgByteCode}`} alt="dummy" className="pred-img" width="800" height="400"/>
+                    {/* <h1>Mask {predictedImage.maskCount}</h1>
+                    <h1>No Mask {predictedImage.noMaskCount}</h1> */}
                 </div>
                 ) : (
                 <>
