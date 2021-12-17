@@ -4,7 +4,7 @@ import "./Image.css"
 
 export default function Image() {
     const [image, setImage] = useState({ preview: "", raw: "" });
-    const [predictedImage, setPredictedImage] = useState({url: ""});
+    const [predictedImage, setPredictedImage] = useState({imgByteCode: ""});
     const [loading, setLoading] = useState(false);
     const [errMesg, setErrMesg] = useState("");
 
@@ -36,7 +36,7 @@ export default function Image() {
             },
           })
           .then(res => {
-            setPredictedImage({url: res.data.predImage});  
+            setPredictedImage({imgByteCode: res.data.predImage});  
             setErrMesg("");
             setLoading(false);     
           })
@@ -87,10 +87,10 @@ export default function Image() {
                 </>
             )}
             
-            {predictedImage.url ? (
+            {predictedImage.imgByteCode ? (
                 <div className="predicted-trim">
                     <h1> Prediction </h1>
-                    <img src={`data:image/jpeg;base64,${predictedImage.url}`} alt="dummy" className="pred-img" width="800" height="400"/>
+                    <img src={`data:image/jpeg;base64,${predictedImage.imgByteCode}`} alt="dummy" className="pred-img" width="800" height="400"/>
                 </div>
                 ) : (
                 <>
