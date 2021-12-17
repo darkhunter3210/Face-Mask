@@ -37,11 +37,11 @@ def pred_analytics(df_param):
         s = df['class'].value_counts(dropna=False)
 
         try:
-            zero_cnt = s[0]
+            zero_cnt = s[0].item()
         except:
             pass
         try:
-            one_cnt = s[1]
+            one_cnt = s[1].item()
         except:
             pass
         print(zero_cnt,one_cnt)
@@ -154,10 +154,16 @@ def predict_img():
     imageio.seek(0)
     encoded_img = encodebytes(imageio.getvalue()).decode('ascii')
 
+    pred_counts = pred_analytics(pred.pandas().xyxy[0])
+
+    # print("mask counts: ",pred_counts[0], "\nno mask counts: ", pred_counts[1])
+
     res = {
         'predImage': encoded_img,
+        'maskCount': pred_counts[0],
+        'noMaskCount': pred_counts[1]
     }
-
+    
     return jsonify(res)
 
 if __name__ == "__main__":
