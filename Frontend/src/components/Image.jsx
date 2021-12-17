@@ -34,12 +34,11 @@ export default function Image() {
               'content-type': 'multipart/form-data',
               'Access-Control-Allow-Origin': '*',
             },
-            responseType: 'blob'
           })
           .then(res => {
-            setPredictedImage({url: res.data});  
+            setPredictedImage({url: res.data.predImage});  
             setErrMesg("");
-            setLoading(false);      
+            setLoading(false);     
           })
           .catch(err => {
             setErrMesg("Failed to predict");
@@ -91,7 +90,7 @@ export default function Image() {
             {predictedImage.url ? (
                 <div className="predicted-trim">
                     <h1> Prediction </h1>
-                    <img src={URL.createObjectURL(predictedImage.url)} alt="dummy" className="pred-img" width="800" height="400"/>
+                    <img src={`data:image/jpeg;base64,${predictedImage.url}`} alt="dummy" className="pred-img" width="800" height="400"/>
                 </div>
                 ) : (
                 <>

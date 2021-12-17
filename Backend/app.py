@@ -2,6 +2,8 @@
 
 from flask import Flask, json, render_template, Response, send_file, request, jsonify
 from flask_cors import CORS, cross_origin
+from numpy.lib.type_check import imag
+from base64 import encodebytes
 import torch.backends.cudnn as cudnn
 import numpy as np
 from PIL import Image
@@ -150,10 +152,13 @@ def predict_img():
     imageio = io.BytesIO()
     pred_img.save(imageio, "PNG", quality=100)
     imageio.seek(0)
+    encoded_img = encodebytes(imageio.getvalue()).decode('ascii')
 
-    # Response containing predicted image
-    response = send_file(imageio, as_attachment=True, attachment_filename='prediction.png', mimetype='image/png')
-    return response
+    res = {
+        'predImage': encoded_img,
+    }
+
+    return jsonify(res)
 
 if __name__ == "__main__":
     app.run(debug=True, threaded = True)
