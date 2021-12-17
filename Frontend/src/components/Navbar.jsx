@@ -46,7 +46,6 @@ function Navbar() {
                         <a href='#stream' className='nav-links' onClick={closeMobileMenu}>Stream</a>
                     </li>
                 </ul>
-                {button && <Button buttonStyle='btn--outline'>Sign Up</Button>}
             </div>
         </nav>
         </>

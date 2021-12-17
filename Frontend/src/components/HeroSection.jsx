@@ -23,7 +23,6 @@ function HeroSection() {
           className='btns'
           buttonStyle='btn--primary'
           buttonSize='btn--large'
-          onClick={console.log('hey')}
         >
           Stream <i className='far fa-play-circle' />
         </Button>
