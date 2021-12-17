@@ -53,7 +53,7 @@ export default function Image() {
       }
 
     return (
-        <div className="image" id="image" style={{width: '100%', height:'min-content',minHeight:'200px'}}>
+        <div className="image" id="image" style={{width: '100%', height:'min-content',minHeight:'100vh'}}>
             <input className="fileInput" 
                 type="file" 
                 onChange={handleImageChange}
