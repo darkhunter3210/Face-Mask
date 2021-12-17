@@ -131,10 +131,12 @@ export default function Image() {
                         options={{
                             scales: {
                                 y: {
-                                    beginAtZero: true
-                                }
+                                    beginAtZero: true,
+                                    ticks: {
+                                        stepSize: 1
+                                    }
+                                },
                             },
-                            
                         }}
                     />
                 </div>
