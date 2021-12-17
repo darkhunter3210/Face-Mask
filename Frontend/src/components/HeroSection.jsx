@@ -7,7 +7,7 @@ function HeroSection() {
   return (
     <div className='hero-container' id="intro">
       <video src='/videos/video-2.mp4' autoPlay loop muted />
-      <h1>Wear a mask, is your task</h1>
+      <h1>Wear a mask, it's your task</h1>
       <p>We will find you if you don't</p>
       <div className='hero-btns'>
         <Button
