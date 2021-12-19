@@ -2,6 +2,8 @@
 
 from flask import Flask, json, render_template, Response, send_file, request, jsonify
 from flask_cors import CORS, cross_origin
+from numpy.lib.type_check import imag
+from base64 import encodebytes
 import torch.backends.cudnn as cudnn
 import numpy as np
 from PIL import Image
@@ -35,11 +37,11 @@ def pred_analytics(df_param):
         s = df['class'].value_counts(dropna=False)
 
         try:
-            zero_cnt = s[0]
+            zero_cnt = s[0].item()
         except:
             pass
         try:
-            one_cnt = s[1]
+            one_cnt = s[1].item()
         except:
             pass
         print(zero_cnt,one_cnt)
@@ -150,10 +152,19 @@ def predict_img():
     imageio = io.BytesIO()
     pred_img.save(imageio, "PNG", quality=100)
     imageio.seek(0)
+    encoded_img = encodebytes(imageio.getvalue()).decode('ascii')
 
-    # Response containing predicted image
-    response = send_file(imageio, as_attachment=True, attachment_filename='prediction.png', mimetype='image/png')
-    return response
+    pred_counts = pred_analytics(pred.pandas().xyxy[0])
+
+    # print("mask counts: ",pred_counts[0], "\nno mask counts: ", pred_counts[1])
+
+    res = {
+        'predImage': encoded_img,
+        'maskCount': pred_counts[0],
+        'noMaskCount': pred_counts[1]
+    }
+    
+    return jsonify(res)
 
 if __name__ == "__main__":
     app.run(debug=True, threaded = True)
