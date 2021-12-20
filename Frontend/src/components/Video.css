@@ -1,0 +1,45 @@
+.Video
+{
+  background-color: white;
+  height: 100vh;
+  width: 100%;
+  position: relative;
+}
+
+.Video .title
+{
+  text-align: center;
+  color: orange;
+  position: relative;
+  top: 100px;
+}
+.Video .container
+{
+  border: solid #5B6DCD 2px;
+  height: 70vh;
+  width: 95%;
+  margin: 0 auto;
+  margin-top: 150px;
+  text-align: center;
+}
+
+.Video .container .drop-zone
+{
+  display: inline-block;
+  width: 75%;
+  height: 30vh;
+  margin: 0 auto;
+  margin-top: 180px;
+}
+
+
+.Video .predicted-trim
+{
+  margin-top: 180px;
+  width: 80%;
+  margin-left: 150px;
+}
+
+
+
+

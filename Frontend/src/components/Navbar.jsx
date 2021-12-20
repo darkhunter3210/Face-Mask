@@ -42,8 +42,12 @@ function Navbar() {
                         <a href='#image' className='nav-links' onClick={closeMobileMenu}>Images</a>
                     </li>
                     <li className='nav-item'>
+                        <a href='#Video' className='nav-links' onClick={closeMobileMenu}>Video</a>
+                    </li>
+                    <li className='nav-item'>
                         <a href='#stream' className='nav-links' onClick={closeMobileMenu}>Stream</a>
                     </li>
+                    
                 </ul>
             </div>
         </nav>

@@ -7,13 +7,15 @@ from base64 import encodebytes
 import torch.backends.cudnn as cudnn
 import numpy as np
 from PIL import Image
+import flask
 import torch
 import pafy
 import cv2 
 import io
 import time
 import simplejpeg
-
+from werkzeug.utils import secure_filename
+import os
 app = Flask(__name__)
 CORS(app)
 
@@ -126,6 +128,63 @@ def stop_feed():
     }
     total_frame = 0
     return Response('Stopped')
+
+
+@app.route('/video_test',methods=['POST'])
+@cross_origin()
+def pred_vid():
+    f = request.files['media']
+    basepath = os.path.dirname(__file__)
+    file_path = os.path.join(
+        basepath, secure_filename(f.filename))
+    f.save(file_path)
+    print(f.filename)
+    capture = cv2.VideoCapture(f.filename)
+    frame_width = int(capture.get(3))
+    frame_height = int(capture.get(4))
+    save_name = f.filename.split('.')[0]+'_out.mp4'
+    out = cv2.VideoWriter(save_name, cv2.VideoWriter_fourcc(*'MP4V'), 30, (frame_width,frame_height),)
+
+    ret, current_frame = capture.read()
+    while (ret):
+
+        current_frame = current_frame[..., ::-1]
+
+        pred = model(current_frame)
+        pred_frame = pred.render()[0]
+
+        pred_frame = pred_frame[..., ::-1]
+        out.write(pred_frame)
+
+        ret, current_frame = capture.read()
+
+    # print(save_name)
+    # print(file_path)
+    response = send_file(save_name, mimetype='video/mp4', as_attachment=True)
+
+    # @flask.after_this_request
+    # def close_action(response):
+    #     @response.call_on_close
+    #     def delete():
+    #         try:
+    #             os.remove(file_path)
+    #         except:
+    #             print(file_path)
+    #         try:
+    #             os.remove(save_name)
+    #         except Exception as e:
+    #             print(e)
+
+    return response
+    # try:
+    #     os.remove(file_path)
+    # except:
+    #     print(file_path)
+    # try:
+    #     os.remove(save_name)
+    # except:
+    #     print(save_name)
+    #return res
 
 
 @app.route('/predict_img',methods=['POST'])
