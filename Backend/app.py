@@ -134,6 +134,7 @@ def stop_feed():
 @cross_origin()
 def pred_vid():
     f = request.files['media']
+    print(type(f))
     basepath = os.path.dirname(__file__)
     file_path = os.path.join(
         basepath, secure_filename(f.filename))

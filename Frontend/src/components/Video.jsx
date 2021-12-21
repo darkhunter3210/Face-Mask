@@ -9,6 +9,8 @@ import Carousel from 'react-elastic-carousel';
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import 'chart.js/auto';
 import "./Video.css"
+import { saveAs } from "file-saver";
+
 
 export default function Video() {
     const [Video, setVideo] = useState({ preview: "", raw: "" });
@@ -59,16 +61,21 @@ export default function Video() {
                 },
               })
               .then(res => {
-                console.log('Response:', res)
+                console.log('Response:', res)   
                 console.log('data:', res.data)
+                const converted = base64ToArrayBuffer(btoa(unescape(encodeURIComponent(res.data))))
+                var data = new Blob([converted], {type: 'video/mp4'});
+                var vidURL = URL.createObjectURL(data);
+                console.log('URL:', data)
                 setPredictedVideo({
-                    imgByteCode: res.data, 
+                    imgByteCode: vidURL, 
                     maskCount: 50, 
                     noMaskCount: 20
                 });
                 setErrMesg("");
               })              
               .catch(err => {
+                console.log(err)
                 setErrMesg("Failed to predict");
                 setLoading(false);
               });
@@ -88,6 +95,21 @@ export default function Video() {
             />
             )
         }
+
+    const handleDownload = () =>{
+        saveAs(predictedVideo.imgByteCode, 'test.mp4')
+    }
+
+    function base64ToArrayBuffer(base64) {
+        var binaryString = window.atob(base64);
+        var binaryLen = binaryString.length;
+        var bytes = new Uint8Array(binaryLen);
+        for (var i = 0; i < binaryLen; i++) {
+           var ascii = binaryString.charCodeAt(i);
+           bytes[i] = ascii;
+        }
+        return bytes;
+     }
 
     return (
         <div className="Video" id="Video" style={{width: '100%', height:'min-content',minHeight:'100vh'}}>
@@ -115,61 +137,13 @@ export default function Video() {
                     else if (loading === false && predictedVideo.imgByteCode)
                     {
                         return <div className="predicted-trim" >
-                            <Carousel>
                             <div>
-                                <h1> Original </h1>
-                                <img src={Video.preview} alt="dummy" width="800" height="400" />
+                                <h1> Your file is Ready! </h1>
+                                <video width="500" height="360" controls loop muted autoPlay>
+                                    <source src={predictedVideo.imgByteCode.blob} type="video/mp4"/>
+                                </video>
                             </div>
-                            <div>
-                                <h1> Prediction </h1>
-                                <img src={`data:Video/jpeg;base64,${predictedVideo.imgByteCode}`} alt="dummy" className="pred-img" width="800" height="400"/>
-                            </div>
-                            <div>
-                                <h1>Bar Graph</h1>
-                            <Bar
-                            data={{
-                                labels:['Count'], 
-                                datasets:[
-                                    {
-                                        label: 'Mask',
-                                        data: [predictedVideo.maskCount,],
-                                        backgroundColor: [
-                                            'rgba(0, 255, 0, .3)',
-                                        ],
-                                        borderColor:[
-                                            'rgba(0, 255, 0, 1)',
-                                        ],
-                                        borderWidth:1,
-                                    },
-                                    {
-                                        label: 'No Mask',
-                                        data: [predictedVideo.noMaskCount],
-                                        backgroundColor: [
-                                            'rgba(255, 0, 0, .3)',
-                                        ],
-                                        borderColor:[
-                                            'rgba(255, 0, 0, 1)',
-                                        ],
-                                        borderWidth:1,
-                                    },
-                                ],
-                            }}
-                            height={400}
-                            width={800}
-                            options={{
-                                scales: {
-                                    y: {
-                                        beginAtZero: true,
-                                        ticks: {
-                                            stepSize: 1
-                                        }
-                                    },
-                                },
-                            }}
-                        />
-
-                            </div>
-                        </Carousel>
+                            
                         <Button
                         className='btns'
                         buttonStyle='btn--outline-two'
@@ -177,6 +151,12 @@ export default function Video() {
                         path="#Video"
                         onClick={resetState}
                     >Reset</Button>
+                    <Button
+                        className='btns'
+                        buttonStyle='btn--outline-two'
+                        buttonSize='btn--large'
+                        onClick={handleDownload}
+                    >Download</Button>
                 </div>
                     }
                 })()
