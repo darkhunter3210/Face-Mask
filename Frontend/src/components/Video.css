@@ -35,11 +35,15 @@
 
 .Video .predicted-trim
 {
+  text-align: center;
   margin-top: 180px;
   width: 80%;
   margin-left: 150px;
 }
-
+.Video .predicted-trim Button
+{
+  margin-left: 25px;
+}
 
 
 
