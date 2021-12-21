@@ -5,7 +5,8 @@ The main objective of this project is to develop a machine learning model that u
 
 ## Video Walthrough
 Here's walthrough of fully functional model:
-<img src='' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+
+<img src='https://github.com/darkhunter3210/Face-Mask/blob/master/Walkthrough.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 
 
