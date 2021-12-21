@@ -97,7 +97,7 @@ export default function Video() {
         }
 
     const handleDownload = () =>{
-        saveAs(predictedVideo.imgByteCode, 'test.mp4')
+        saveAs(predictedVideo.imgByteCode, 'predicted.mp4')
     }
 
     function base64ToArrayBuffer(base64) {
